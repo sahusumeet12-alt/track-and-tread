@@ -10,1047 +10,206 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-database-compat.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 450px;
-            width: 100%;
-            padding: 40px;
-            margin: 0 auto;
-            backdrop-filter: blur(10px);
-        }
-
-        .container.wide {
-            max-width: 1400px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .school-name {
-            font-size: 28px;
-            font-weight: 700;
-            color: #8B1538;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 32px;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #8B4513;
-            font-size: 16px;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        .footer-text {
-            text-align: center;
-            color: #999;
-            font-size: 13px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .footer-text strong {
-            color: #8B4513;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            padding: 5px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            color: #666;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .form-section {
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s;
-            background: white;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .user-type {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .user-type-btn {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            font-weight: 600;
-            font-size: 16px;
-            min-height: 50px;
-        }
-
-        .user-type-btn:hover {
-            border-color: #667eea;
-        }
-
-        .user-type-btn.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(67, 233, 123, 0.4);
-        }
-
-        .note {
-            text-align: center;
-            margin-top: 15px;
-            color: #999;
-            font-size: 12px;
-        }
-
-        .feature-list {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            color: #555;
-            font-size: 13px;
-        }
-
-        .feature-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .feature-icon {
-            color: #43e97b;
-            font-size: 18px;
-        }
-
-        /* Dashboard Styles */
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            color: white;
-        }
-
-        .welcome-section h2 {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-        }
-
-        .user-info {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .logout-btn, .back-btn {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover, .back-btn:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .main-title {
-            text-align: center;
-            color: #333;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .intro-text {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .topic-card {
-            padding: 30px;
-            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-            border-radius: 15px;
-            border: 2px solid #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border-color: #43e97b;
-        }
-
-        .topic-card:active {
-            transform: translateY(-5px);
-        }
-
-        .topic-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-
-        .topic-card h3 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 22px;
-        }
-
-        .topic-card p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* Detail Page Styles */
-        .detail-container {
-            padding: 20px;
-        }
-
-        .detail-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            color: white;
-        }
-
-        .detail-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .detail-content h2 {
-            color: #333;
-            margin: 30px 0 15px 0;
-            font-size: 26px;
-        }
-
-        .detail-content h3 {
-            color: #555;
-            margin: 20px 0 10px 0;
-            font-size: 20px;
-        }
-
-        .detail-content p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-
-        .chart-container {
-            margin: 30px 0;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-
-        .comparison-bar {
-            margin: 15px 0;
-        }
-
-        .bar-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .bar-track {
-            width: 100%;
-            height: 30px;
-            background: #e0e0e0;
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-            border-radius: 15px;
-            transition: width 1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 10px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .country-detail-card {
-            margin: 20px 0;
-            padding: 25px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border-radius: 15px;
-            border-left: 5px solid #43e97b;
-        }
-
-        .country-detail-card h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 15px 0;
-        }
-
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .data-box {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-        }
-
-        .data-value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #43e97b;
-            margin-bottom: 5px;
-        }
-
-        .data-label {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .project-card {
-            margin: 15px 0;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s;
-        }
-
-        .project-card:hover {
-            border-color: #43e97b;
-            box-shadow: 0 5px 15px rgba(67, 233, 123, 0.2);
-        }
-
-        .project-card h4 {
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-present {
-            background: #43e97b;
-            color: white;
-        }
-
-        .status-future {
-            background: #667eea;
-            color: white;
-        }
-
-        .list-styled {
-            padding-left: 20px;
-            margin: 15px 0;
-        }
-
-        .list-styled li {
-            margin: 10px 0;
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #667eea;
-            margin: 20px 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* ============ ADMIN PANEL ENHANCED STYLES ============ */
-        .admin-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .admin-stat-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            border-left: 5px solid #667eea;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        .admin-stat-card .stat-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-        }
-
-        .admin-stat-card .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .admin-stat-card .stat-label {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .admin-stat-card.india {
-            border-left-color: #f97316;
-        }
-
-        .admin-stat-card.india .stat-value {
-            color: #f97316;
-        }
-
-        .admin-stat-card.uae {
-            border-left-color: #0ea5e9;
-        }
-
-        .admin-stat-card.uae .stat-value {
-            color: #0ea5e9;
-        }
-
-        .admin-stat-card.surveys {
-            border-left-color: #43e97b;
-        }
-
-        .admin-stat-card.surveys .stat-value {
-            color: #43e97b;
-        }
-
-        .summary-banner {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-left: 5px solid #f59e0b;
-            padding: 20px 25px;
-            border-radius: 0 15px 15px 0;
-            margin: 25px 0;
-        }
-
-        .summary-banner h4 {
-            color: #92400e;
-            margin-bottom: 12px;
-            font-size: 18px;
-        }
-
-        .summary-banner p {
-            font-size: 14px;
-            color: #78350f;
-            margin-bottom: 8px;
-        }
-
-        .admin-tabs-container {
-            display: flex;
-            gap: 12px;
-            margin: 25px 0;
-            flex-wrap: wrap;
-        }
-
-        .admin-tab-btn {
-            padding: 14px 28px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .admin-tab-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .admin-tab-btn:hover:not(.active) {
-            background: #e0e0e0;
-        }
-
-        .admin-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .admin-section h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 20px;
-        }
-
-        /* Data Table Styles */
-        .table-container {
-            overflow-x: auto;
-            max-height: 500px;
-            overflow-y: auto;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .survey-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            background: white;
-        }
-
-        .survey-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 14px 10px;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .survey-table td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .survey-table tr:hover {
-            background: #f5f5f5;
-        }
-
-        .survey-table tr.india-row {
-            background: #fff7ed;
-        }
-
-        .survey-table tr.india-row:hover {
-            background: #ffedd5;
-        }
-
-        .survey-table tr.uae-row {
-            background: #f0f9ff;
-        }
-
-        .survey-table tr.uae-row:hover {
-            background: #e0f2fe;
-        }
-
-        .rating-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .rating-badge.excellent {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .rating-badge.good {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .rating-badge.fair {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .rating-badge.needs-improvement {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .filter-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .filter-container select {
-            padding: 12px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            min-width: 150px;
-        }
-
-        .filter-container select:focus {
-            border-color: #667eea;
-            outline: none;
-        }
-
-        /* Chart Styles for Admin */
-        .admin-chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 25px;
-        }
-
-        .admin-chart-box {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        .admin-chart-box h4 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .chart-bar-group {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 200px;
-            padding: 20px 0;
-            border-bottom: 2px solid #eee;
-        }
-
-        .chart-bar-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .chart-bars {
-            display: flex;
-            gap: 6px;
-            align-items: flex-end;
-        }
-
-        .chart-bar {
-            width: 28px;
-            border-radius: 6px 6px 0 0;
-            transition: height 0.5s ease;
-        }
-
-        .chart-bar.india-bar {
-            background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
-        }
-
-        .chart-bar.uae-bar {
-            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
-        }
-
-        .chart-bar-label {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .chart-legend {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 15px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
-
-        .comparison-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .comparison-label {
-            width: 140px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .comparison-bar-bg {
-            flex: 1;
-            height: 28px;
-            background: #eee;
-            border-radius: 14px;
-            overflow: hidden;
-            margin: 0 12px;
-        }
-
-        .comparison-bar-fill {
-            height: 100%;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 12px;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            transition: width 0.5s ease;
-        }
-
-        .export-btn {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            margin: 8px;
-            transition: all 0.3s;
-        }
-
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(67, 233, 123, 0.4);
-        }
-
-        .export-btn.secondary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { background: rgba(255,255,255,0.95); border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 450px; width: 100%; padding: 40px; margin: 0 auto; backdrop-filter: blur(10px); }
+        .container.wide { max-width: 1400px; }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .school-name { font-size: 28px; font-weight: 700; color: #8B1538; margin-bottom: 5px; letter-spacing: 1px; }
+        h1 { color: #333; font-size: 32px; margin-bottom: 5px; font-weight: 700; }
+        .subtitle { color: #8B4513; font-size: 16px; margin-bottom: 25px; font-weight: 500; }
+        .footer-text { text-align: center; color: #999; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; }
+        .footer-text strong { color: #8B4513; }
+        .tabs { display: flex; margin-bottom: 30px; background: #f0f0f0; border-radius: 10px; padding: 5px; }
+        .tab { flex: 1; padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; color: #666; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+        .tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .form-section { display: none; }
+        .form-section.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: #333; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; transition: all 0.3s; background: white; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .user-type { display: flex; gap: 10px; margin-bottom: 20px; }
+        .user-type-btn { flex: 1; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; background: white; cursor: pointer; transition: all 0.3s; text-align: center; font-weight: 600; font-size: 16px; min-height: 50px; }
+        .user-type-btn:hover { border-color: #667eea; }
+        .user-type-btn.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .submit-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 5px 15px rgba(67,233,123,0.3); }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(67,233,123,0.4); }
+        .note { text-align: center; margin-top: 15px; color: #999; font-size: 12px; }
+        .feature-list { margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #555; font-size: 13px; }
+        .feature-item:last-child { margin-bottom: 0; }
+        .feature-icon { color: #43e97b; font-size: 18px; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white; }
+        .welcome-section h2 { margin: 0 0 5px 0; font-size: 24px; }
+        .user-info { margin: 0; opacity: 0.9; font-size: 14px; }
+        .logout-btn, .back-btn { padding: 10px 20px; background: rgba(255,255,255,0.2); border: 2px solid white; color: white; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+        .logout-btn:hover, .back-btn:hover { background: white; color: #667eea; }
+        .main-title { text-align: center; color: #333; font-size: 32px; margin-bottom: 10px; }
+        .intro-text { text-align: center; color: #666; margin-bottom: 30px; }
+        .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0; }
+        .topic-card { padding: 30px; background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border-radius: 15px; border: 2px solid #e0e0e0; cursor: pointer; transition: all 0.3s; text-align: center; }
+        .topic-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-color: #43e97b; }
+        .topic-card:active { transform: translateY(-5px); }
+        .topic-icon { font-size: 60px; margin-bottom: 20px; }
+        .topic-card h3 { color: #333; margin-bottom: 10px; font-size: 22px; }
+        .topic-card p { color: #666; font-size: 14px; line-height: 1.6; }
+        .detail-container { padding: 20px; }
+        .detail-header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white; }
+        .detail-content { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .detail-content h2 { color: #333; margin: 30px 0 15px 0; font-size: 26px; }
+        .detail-content h3 { color: #555; margin: 20px 0 10px 0; font-size: 20px; }
+        .detail-content p { color: #666; line-height: 1.8; margin-bottom: 15px; }
+        .chart-container { margin: 30px 0; padding: 25px; background: #f8f9fa; border-radius: 12px; }
+        .comparison-bar { margin: 15px 0; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .bar-track { width: 100%; height: 30px; background: #e0e0e0; border-radius: 15px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%); border-radius: 15px; transition: width 1s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-weight: bold; }
+        .country-detail-card { margin: 20px 0; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 15px; border-left: 5px solid #43e97b; }
+        .country-detail-card h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 15px 0; }
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .data-box { padding: 15px; background: white; border-radius: 10px; text-align: center; border: 2px solid #e0e0e0; }
+        .data-value { font-size: 28px; font-weight: bold; color: #43e97b; margin-bottom: 5px; }
+        .data-label { font-size: 13px; color: #666; }
+        .project-card { margin: 15px 0; padding: 20px; background: white; border-radius: 12px; border: 2px solid #e0e0e0; transition: all 0.3s; }
+        .project-card:hover { border-color: #43e97b; box-shadow: 0 5px 15px rgba(67,233,123,0.2); }
+        .project-card h4 { color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .status-present { background: #43e97b; color: white; }
+        .status-future { background: #667eea; color: white; }
+        .list-styled { padding-left: 20px; margin: 15px 0; }
+        .list-styled li { margin: 10px 0; color: #666; line-height: 1.6; }
+        .highlight-box { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); padding: 20px; border-radius: 12px; border-left: 4px solid #667eea; margin: 20px 0; }
+        .hidden { display: none !important; }
+        .admin-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin: 25px 0; }
+        .admin-stat-card { background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%); border-radius: 15px; padding: 25px; text-align: center; border-left: 5px solid #667eea; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .admin-stat-card .stat-icon { font-size: 40px; margin-bottom: 12px; }
+        .admin-stat-card .stat-value { font-size: 36px; font-weight: 700; color: #667eea; }
+        .admin-stat-card .stat-label { font-size: 14px; color: #666; margin-top: 5px; }
+        .admin-stat-card.india { border-left-color: #f97316; }
+        .admin-stat-card.india .stat-value { color: #f97316; }
+        .admin-stat-card.uae { border-left-color: #0ea5e9; }
+        .admin-stat-card.uae .stat-value { color: #0ea5e9; }
+        .admin-stat-card.surveys { border-left-color: #43e97b; }
+        .admin-stat-card.surveys .stat-value { color: #43e97b; }
+        .summary-banner { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 5px solid #f59e0b; padding: 20px 25px; border-radius: 0 15px 15px 0; margin: 25px 0; }
+        .summary-banner h4 { color: #92400e; margin-bottom: 12px; font-size: 18px; }
+        .summary-banner p { font-size: 14px; color: #78350f; margin-bottom: 8px; }
+        .admin-tabs-container { display: flex; gap: 12px; margin: 25px 0; flex-wrap: wrap; }
+        .admin-tab-btn { padding: 14px 28px; background: #f0f0f0; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; }
+        .admin-tab-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .admin-tab-btn:hover:not(.active) { background: #e0e0e0; }
+        .admin-section { background: #f8f9fa; border-radius: 15px; padding: 25px; margin-top: 20px; }
+        .admin-section h3 { color: #667eea; margin-bottom: 20px; font-size: 20px; }
+        .table-container { overflow-x: auto; max-height: 500px; overflow-y: auto; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .survey-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; }
+        .survey-table th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 10px; text-align: left; font-weight: 600; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
+        .survey-table td { padding: 12px 10px; border-bottom: 1px solid #eee; }
+        .survey-table tr:hover { background: #f5f5f5; }
+        .survey-table tr.india-row { background: #fff7ed; }
+        .survey-table tr.india-row:hover { background: #ffedd5; }
+        .survey-table tr.uae-row { background: #f0f9ff; }
+        .survey-table tr.uae-row:hover { background: #e0f2fe; }
+        .rating-badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .rating-badge.excellent { background: #d1fae5; color: #065f46; }
+        .rating-badge.good { background: #dbeafe; color: #1e40af; }
+        .rating-badge.fair { background: #fef3c7; color: #92400e; }
+        .rating-badge.needs-improvement { background: #fee2e2; color: #991b1b; }
+        .filter-container { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-container select { padding: 12px 18px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; min-width: 150px; }
+        .filter-container select:focus { border-color: #667eea; outline: none; }
+        .admin-chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 25px; }
+        .admin-chart-box { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .admin-chart-box h4 { color: #333; margin-bottom: 20px; font-size: 16px; }
+        .chart-bar-group { display: flex; align-items: flex-end; justify-content: space-around; height: 200px; padding: 20px 0; border-bottom: 2px solid #eee; }
+        .chart-bar-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .chart-bars { display: flex; gap: 6px; align-items: flex-end; }
+        .chart-bar { width: 28px; border-radius: 6px 6px 0 0; transition: height 0.5s ease; }
+        .chart-bar.india-bar { background: linear-gradient(180deg, #f97316 0%, #ea580c 100%); }
+        .chart-bar.uae-bar { background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%); }
+        .chart-bar-label { font-size: 11px; color: #666; }
+        .chart-legend { display: flex; justify-content: center; gap: 30px; margin-top: 15px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; }
+        .comparison-row { display: flex; align-items: center; margin-bottom: 15px; }
+        .comparison-label { width: 140px; font-size: 13px; font-weight: 500; }
+        .comparison-bar-bg { flex: 1; height: 28px; background: #eee; border-radius: 14px; overflow: hidden; margin: 0 12px; }
+        .comparison-bar-fill { height: 100%; border-radius: 14px; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; color: white; font-size: 12px; font-weight: 600; transition: width 0.5s ease; }
+        .export-btn { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border: none; padding: 14px 28px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; margin: 8px; transition: all 0.3s; }
+        .export-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(67,233,123,0.4); }
+        .export-btn.secondary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         @media (max-width: 768px) {
-            .dashboard-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .topic-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 20px 15px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .school-name {
-                font-size: 22px;
-            }
-
-            .tabs {
-                flex-direction: row;
-                gap: 5px;
-            }
-
-            .tab {
-                font-size: 14px;
-                padding: 10px 5px;
-            }
-
-            input, select, .submit-btn {
-                font-size: 16px !important;
-            }
-
-            .form-group {
-                margin-bottom: 18px;
-            }
-
-            .admin-stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .admin-tabs-container {
-                flex-direction: column;
-            }
-
-            .admin-chart-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .comparison-label {
-                width: 100px;
-                font-size: 11px;
-            }
+            .dashboard-header { flex-direction: column; gap: 15px; text-align: center; }
+            .topic-grid { grid-template-columns: 1fr; }
+            .container { padding: 20px 15px; }
+            h1 { font-size: 24px; }
+            .school-name { font-size: 22px; }
+            .tabs { flex-direction: row; gap: 5px; }
+            .tab { font-size: 14px; padding: 10px 5px; }
+            input, select, .submit-btn { font-size: 16px !important; }
+            .form-group { margin-bottom: 18px; }
+            .admin-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .admin-tabs-container { flex-direction: column; }
+            .admin-chart-grid { grid-template-columns: 1fr; }
+            .comparison-label { width: 100px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
     <div class="container" id="mainContainer">
-        <!-- Login Screen -->
         <div id="loginScreen">
             <div class="logo">
                 <h1 class="school-name">QUEENS' COLLEGE INDORE</h1>
                 <h1>Track & Tread : My Carbon Shadow</h1>
                 <p class="subtitle">Queens College Environmental Initiative</p>
             </div>
-
             <div class="tabs">
                 <div class="tab active" onclick="switchTab('user')">Student/Teacher</div>
                 <div class="tab" onclick="switchTab('admin')">Admin</div>
             </div>
-
-            <!-- Combined User Section -->
             <div id="userSection" class="form-section active">
                 <div class="user-type">
                     <div class="user-type-btn selected" onclick="toggleUserForm('login')">Login</div>
                     <div class="user-type-btn" onclick="toggleUserForm('signup')">Sign Up</div>
                 </div>
-
                 <div id="userLogin">
-                    <div class="form-group">
-                        <label>User ID</label>
-                        <input type="text" id="userUserId" placeholder="Enter your user ID">
-                    </div>
-                    <div class="form-group">
-                        <label>Your Role</label>
-                        <select id="userRole" required>
-                            <option value="">Select your role</option>
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="userPassword" placeholder="Enter your password">
-                    </div>
+                    <div class="form-group"><label>User ID</label><input type="text" id="userUserId" placeholder="Enter your user ID"></div>
+                    <div class="form-group"><label>Your Role</label><select id="userRole" required><option value="">Select your role</option><option value="student">Student</option><option value="teacher">Teacher</option></select></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="userPassword" placeholder="Enter your password"></div>
                     <button class="submit-btn" onclick="userLogin()">Login</button>
                 </div>
-
                 <div id="userSignup" class="hidden">
-                    <div class="form-group">
-                        <label>Your Role</label>
-                        <select id="userSignupRole" onchange="updateSignupForm()" required>
-                            <option value="">Select your role</option>
-                            <option value="student">Student</option>
-                            <option value="teacher">Teacher</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="userName" placeholder="Enter your full name">
-                    </div>
-                    <div class="form-group">
-                        <label id="classDeptLabel">Class/Department</label>
-                        <input type="text" id="userClassDept" placeholder="Enter your class or department">
-                    </div>
-                    <div class="form-group">
-                        <label>Country</label>
-                        <select id="userCountry">
-                            <option value="">Select your country</option>
-                            <option value="Abu Dhabi">Abu Dhabi</option>
-                            <option value="India">India</option>
-                            <option value="Japan">Japan</option>
-                            <option value="USA">USA</option>
-                            <option value="Bangladesh">Bangladesh</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" id="userNewPassword" placeholder="Create a password">
-                    </div>
+                    <div class="form-group"><label>Your Role</label><select id="userSignupRole" onchange="updateSignupForm()" required><option value="">Select your role</option><option value="student">Student</option><option value="teacher">Teacher</option></select></div>
+                    <div class="form-group"><label>Full Name</label><input type="text" id="userName" placeholder="Enter your full name"></div>
+                    <div class="form-group"><label id="classDeptLabel">Class/Department</label><input type="text" id="userClassDept" placeholder="Enter your class or department"></div>
+                    <div class="form-group"><label>Country</label><select id="userCountry"><option value="">Select your country</option><option value="Abu Dhabi">Abu Dhabi</option><option value="India">India</option><option value="Japan">Japan</option><option value="USA">USA</option><option value="Bangladesh">Bangladesh</option></select></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="userNewPassword" placeholder="Create a password"></div>
                     <button class="submit-btn" onclick="userSignup()" id="userSignupBtn">Create Account</button>
                     <p class="note">User ID will be generated automatically</p>
                 </div>
             </div>
-
-            <!-- Admin Section -->
             <div id="adminSection" class="form-section">
-                <div class="form-group">
-                    <label>Admin Username</label>
-                    <input type="text" id="adminUsername" placeholder="Enter admin username">
-                </div>
-                <div class="form-group">
-                    <label>Admin Password</label>
-                    <input type="password" id="adminPassword" placeholder="Enter admin password">
-                </div>
+                <div class="form-group"><label>Admin Username</label><input type="text" id="adminUsername" placeholder="Enter admin username"></div>
+                <div class="form-group"><label>Admin Password</label><input type="password" id="adminPassword" placeholder="Enter admin password"></div>
                 <button class="submit-btn" onclick="adminLogin()">Admin Login</button>
                 <p class="note">Authorized personnel only</p>
                 <p class="note" style="margin-top: 10px; color: #667eea;"><strong>Demo:</strong> admin / carbon2025</p>
             </div>
-
             <div class="feature-list">
-                <div class="feature-item">
-                    <span class="feature-icon">✓</span>
-                    <span>Calculate your carbon footprint</span>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">✓</span>
-                    <span>Track your environmental impact</span>
-                </div>
-                <div class="feature-item">
-                    <span class="feature-icon">✓</span>
-                    <span>Get personalized eco-tips</span>
-                </div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Calculate your carbon footprint</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Track your environmental impact</span></div>
+                <div class="feature-item"><span class="feature-icon">✓</span><span>Get personalized eco-tips</span></div>
             </div>
-
-            <div class="footer-text">
-                <strong>Powered by Queens' College Indore</strong><br>
-                <span style="font-size: 11px;">Leading Environmental Awareness & Climate Action</span>
-            </div>
+            <div class="footer-text"><strong>Powered by Queens' College Indore</strong><br><span style="font-size: 11px;">Leading Environmental Awareness & Climate Action</span></div>
         </div>
     </div>
 
     <script>
-        // ============ DUMMY SURVEY DATA - 80 STUDENTS (50 India + 30 UAE) ============
+        // ============ SURVEY DATA - 80 STUDENTS (50 India + 30 UAE) ============
+        // Classes: IX and XI only | UAE includes Hindu names
         const dummySurveyData = [
-            // INDIA STUDENTS (50)
+            // INDIA STUDENTS - Class XI (sno 1-27)
             {sno: 1, name: "Aditi Hurmade", country: "India", school: "Queens' College, Indore", class: "XI", date: "13-Oct-2024", time: "09:23", carbon: 11.2, rating: "Good", visibleIndex: 1},
             {sno: 2, name: "Alefiya Stationwala", country: "India", school: "Queens' College, Indore", class: "XI", date: "13-Oct-2024", time: "10:45", carbon: 9.8, rating: "Excellent", visibleIndex: 2},
             {sno: 3, name: "Ananya Yadav", country: "India", school: "Queens' College, Indore", class: "XI", date: "14-Oct-2024", time: "11:12", carbon: 13.5, rating: "Good", visibleIndex: 3},
@@ -1078,6 +237,7 @@
             {sno: 25, name: "Kavya Jain", country: "India", school: "Queens' College, Indore", class: "XI", date: "25-Oct-2024", time: "09:22", carbon: 12.6, rating: "Good", visibleIndex: 25},
             {sno: 26, name: "Kenisha Jain", country: "India", school: "Queens' College, Indore", class: "XI", date: "25-Oct-2024", time: "15:15", carbon: 10.8, rating: "Good", visibleIndex: 26},
             {sno: 27, name: "Stuti Gupta", country: "India", school: "Queens' College, Indore", class: "XI", date: "26-Oct-2024", time: "10:40", carbon: 14.3, rating: "Good", visibleIndex: 27},
+            // INDIA STUDENTS - Class IX (sno 28-50)
             {sno: 28, name: "Aastha Binwani", country: "India", school: "Queens' College, Indore", class: "IX", date: "13-Oct-2024", time: "11:25", carbon: 9.1, rating: "Excellent", visibleIndex: 28},
             {sno: 29, name: "Arohi Jain", country: "India", school: "Queens' College, Indore", class: "IX", date: "14-Oct-2024", time: "09:50", carbon: 11.7, rating: "Good", visibleIndex: 29},
             {sno: 30, name: "Bhavya Mehta", country: "India", school: "Queens' College, Indore", class: "IX", date: "15-Oct-2024", time: "14:20", carbon: 13.4, rating: "Good", visibleIndex: 30},
@@ -1092,77 +252,63 @@
             {sno: 39, name: "Manya Jain", country: "India", school: "Queens' College, Indore", class: "IX", date: "24-Oct-2024", time: "15:50", carbon: 8.3, rating: "Excellent", visibleIndex: 39},
             {sno: 40, name: "Saanvi Saxena", country: "India", school: "Queens' College, Indore", class: "IX", date: "25-Oct-2024", time: "11:20", carbon: 13.1, rating: "Good", visibleIndex: 40},
             {sno: 41, name: "Shubhi Jain", country: "India", school: "Queens' College, Indore", class: "IX", date: "26-Oct-2024", time: "10:45", carbon: 12.4, rating: "Good", visibleIndex: 41},
-            {sno: 42, name: "Adity Verulkar", country: "India", school: "Queens' College, Indore", class: "XII", date: "14-Oct-2024", time: "09:15", carbon: 14.6, rating: "Good", visibleIndex: 42},
-            {sno: 43, name: "Angel Chouhan", country: "India", school: "Queens' College, Indore", class: "XII", date: "15-Oct-2024", time: "12:40", carbon: 11.1, rating: "Good", visibleIndex: 43},
-            {sno: 44, name: "Anvesha Verma", country: "India", school: "Queens' College, Indore", class: "XII", date: "16-Oct-2024", time: "14:55", carbon: 9.9, rating: "Excellent", visibleIndex: 44},
-            {sno: 45, name: "Divita Natu", country: "India", school: "Queens' College, Indore", class: "XII", date: "17-Oct-2024", time: "10:30", carbon: 16.2, rating: "Fair", visibleIndex: 45},
-            {sno: 46, name: "Khushi Somani", country: "India", school: "Queens' College, Indore", class: "XII", date: "18-Oct-2024", time: "13:15", carbon: 12.8, rating: "Good", visibleIndex: 46},
-            {sno: 47, name: "Palak Jain", country: "India", school: "Queens' College, Indore", class: "XII", date: "19-Oct-2024", time: "09:50", carbon: 10.4, rating: "Good", visibleIndex: 47},
-            {sno: 48, name: "Priyanshi Kapoor", country: "India", school: "Queens' College, Indore", class: "XII", date: "20-Oct-2024", time: "11:35", carbon: 8.8, rating: "Excellent", visibleIndex: 48},
-            {sno: 49, name: "Srishti Gulwani", country: "India", school: "Queens' College, Indore", class: "XII", date: "21-Oct-2024", time: "15:20", carbon: 13.9, rating: "Good", visibleIndex: 49},
-            {sno: 50, name: "Arvee Jain", country: "India", school: "Queens' College, Indore", class: "XII", date: "22-Oct-2024", time: "10:05", carbon: 11.6, rating: "Good", visibleIndex: 50},
-            
-            // UAE STUDENTS (30)
+            {sno: 42, name: "Adity Verulkar", country: "India", school: "Queens' College, Indore", class: "IX", date: "14-Oct-2024", time: "09:15", carbon: 14.6, rating: "Good", visibleIndex: 42},
+            {sno: 43, name: "Angel Chouhan", country: "India", school: "Queens' College, Indore", class: "XI", date: "15-Oct-2024", time: "12:40", carbon: 11.1, rating: "Good", visibleIndex: 43},
+            {sno: 44, name: "Anvesha Verma", country: "India", school: "Queens' College, Indore", class: "IX", date: "16-Oct-2024", time: "14:55", carbon: 9.9, rating: "Excellent", visibleIndex: 44},
+            {sno: 45, name: "Divita Natu", country: "India", school: "Queens' College, Indore", class: "XI", date: "17-Oct-2024", time: "10:30", carbon: 16.2, rating: "Fair", visibleIndex: 45},
+            {sno: 46, name: "Khushi Somani", country: "India", school: "Queens' College, Indore", class: "IX", date: "18-Oct-2024", time: "13:15", carbon: 12.8, rating: "Good", visibleIndex: 46},
+            {sno: 47, name: "Palak Jain", country: "India", school: "Queens' College, Indore", class: "XI", date: "19-Oct-2024", time: "09:50", carbon: 10.4, rating: "Good", visibleIndex: 47},
+            {sno: 48, name: "Priyanshi Kapoor", country: "India", school: "Queens' College, Indore", class: "IX", date: "20-Oct-2024", time: "11:35", carbon: 8.8, rating: "Excellent", visibleIndex: 48},
+            {sno: 49, name: "Srishti Gulwani", country: "India", school: "Queens' College, Indore", class: "XI", date: "21-Oct-2024", time: "15:20", carbon: 13.9, rating: "Good", visibleIndex: 49},
+            {sno: 50, name: "Arvee Jain", country: "India", school: "Queens' College, Indore", class: "IX", date: "22-Oct-2024", time: "10:05", carbon: 11.6, rating: "Good", visibleIndex: 50},
+            // UAE STUDENTS - Class XI (sno 51-60) - Mixed Hindu + Muslim names
             {sno: 51, name: "Fatima Al Mansoori", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "13-Oct-2024", time: "10:30", carbon: 18.5, rating: "Fair", visibleIndex: 51},
             {sno: 52, name: "Aisha Mohammed", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "14-Oct-2024", time: "11:45", carbon: 21.2, rating: "Needs Improvement", visibleIndex: 52},
-            {sno: 53, name: "Sara Al Hashemi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "15-Oct-2024", time: "09:20", carbon: 17.8, rating: "Fair", visibleIndex: 53},
+            {sno: 53, name: "Neha Patel", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "15-Oct-2024", time: "09:20", carbon: 17.8, rating: "Fair", visibleIndex: 53},
             {sno: 54, name: "Mariam Abdullah", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "16-Oct-2024", time: "14:15", carbon: 19.4, rating: "Fair", visibleIndex: 54},
             {sno: 55, name: "Noura Al Ketbi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "17-Oct-2024", time: "10:55", carbon: 16.9, rating: "Fair", visibleIndex: 55},
-            {sno: 56, name: "Hessa Al Shamsi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "18-Oct-2024", time: "13:40", carbon: 22.5, rating: "Needs Improvement", visibleIndex: 56},
+            {sno: 56, name: "Pooja Gupta", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "18-Oct-2024", time: "13:40", carbon: 22.5, rating: "Needs Improvement", visibleIndex: 56},
             {sno: 57, name: "Shamma Al Mazrouei", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "19-Oct-2024", time: "09:35", carbon: 18.1, rating: "Fair", visibleIndex: 57},
             {sno: 58, name: "Latifa Al Nuaimi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "20-Oct-2024", time: "15:25", carbon: 20.3, rating: "Needs Improvement", visibleIndex: 58},
-            {sno: 59, name: "Moza Al Dhaheri", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "21-Oct-2024", time: "11:10", carbon: 17.2, rating: "Fair", visibleIndex: 59},
+            {sno: 59, name: "Sneha Pillai", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "21-Oct-2024", time: "11:10", carbon: 17.2, rating: "Fair", visibleIndex: 59},
             {sno: 60, name: "Rawdha Al Suwaidi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "22-Oct-2024", time: "10:20", carbon: 19.8, rating: "Fair", visibleIndex: 60},
+            // UAE STUDENTS - Class IX (sno 61-80) - Mixed Hindu + Muslim names
             {sno: 61, name: "Ayesha Khan", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "13-Oct-2024", time: "12:50", carbon: 16.4, rating: "Fair", visibleIndex: 61},
-            {sno: 62, name: "Zara Ahmed", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "14-Oct-2024", time: "09:40", carbon: 18.9, rating: "Fair", visibleIndex: 62},
+            {sno: 62, name: "Tanvi Deshmukh", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "14-Oct-2024", time: "09:40", carbon: 18.9, rating: "Fair", visibleIndex: 62},
             {sno: 63, name: "Hind Al Falasi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "15-Oct-2024", time: "14:30", carbon: 21.7, rating: "Needs Improvement", visibleIndex: 63},
             {sno: 64, name: "Amna Al Mheiri", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "16-Oct-2024", time: "10:15", carbon: 17.5, rating: "Fair", visibleIndex: 64},
-            {sno: 65, name: "Salama Al Kaabi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "17-Oct-2024", time: "13:55", carbon: 19.2, rating: "Fair", visibleIndex: 65},
+            {sno: 65, name: "Divya Kapoor", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "17-Oct-2024", time: "13:55", carbon: 19.2, rating: "Fair", visibleIndex: 65},
             {sno: 66, name: "Maitha Al Ameri", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "18-Oct-2024", time: "09:25", carbon: 15.8, rating: "Fair", visibleIndex: 66},
             {sno: 67, name: "Shamsa Al Qassimi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "19-Oct-2024", time: "11:45", carbon: 20.6, rating: "Needs Improvement", visibleIndex: 67},
-            {sno: 68, name: "Afra Al Balooshi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "20-Oct-2024", time: "15:10", carbon: 18.3, rating: "Fair", visibleIndex: 68},
+            {sno: 68, name: "Shruti Venkatesh", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "20-Oct-2024", time: "15:10", carbon: 18.3, rating: "Fair", visibleIndex: 68},
             {sno: 69, name: "Mouza Al Romaithi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "21-Oct-2024", time: "10:35", carbon: 22.1, rating: "Needs Improvement", visibleIndex: 69},
             {sno: 70, name: "Wadha Al Khaili", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "22-Oct-2024", time: "14:20", carbon: 17.9, rating: "Fair", visibleIndex: 70},
-            {sno: 71, name: "Reem Al Zaabi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "14-Oct-2024", time: "10:50", carbon: 19.5, rating: "Fair", visibleIndex: 71},
-            {sno: 72, name: "Dana Al Hosani", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "15-Oct-2024", time: "13:30", carbon: 21.8, rating: "Needs Improvement", visibleIndex: 72},
-            {sno: 73, name: "Lulwa Al Rashdi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "16-Oct-2024", time: "09:15", carbon: 16.7, rating: "Fair", visibleIndex: 73},
-            {sno: 74, name: "Meera Al Hammadi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "17-Oct-2024", time: "12:25", carbon: 20.1, rating: "Needs Improvement", visibleIndex: 74},
-            {sno: 75, name: "Asma Al Junaibi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "18-Oct-2024", time: "15:40", carbon: 18.6, rating: "Fair", visibleIndex: 75},
-            {sno: 76, name: "Hamda Al Tayer", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "19-Oct-2024", time: "10:05", carbon: 23.2, rating: "Needs Improvement", visibleIndex: 76},
-            {sno: 77, name: "Shaikha Al Nahyan", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "20-Oct-2024", time: "14:50", carbon: 17.4, rating: "Fair", visibleIndex: 77},
-            {sno: 78, name: "Alia Al Maktoum", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "21-Oct-2024", time: "11:30", carbon: 19.9, rating: "Fair", visibleIndex: 78},
-            {sno: 79, name: "Hoor Al Suwaidi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "22-Oct-2024", time: "09:55", carbon: 21.4, rating: "Needs Improvement", visibleIndex: 79},
-            {sno: 80, name: "Jawaher Al Muhairi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XII", date: "23-Oct-2024", time: "13:15", carbon: 18.2, rating: "Fair", visibleIndex: 80}
+            {sno: 71, name: "Riya Sharma", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "14-Oct-2024", time: "10:50", carbon: 19.5, rating: "Fair", visibleIndex: 71},
+            {sno: 72, name: "Dana Al Hosani", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "15-Oct-2024", time: "13:30", carbon: 21.8, rating: "Needs Improvement", visibleIndex: 72},
+            {sno: 73, name: "Priya Nair", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "16-Oct-2024", time: "09:15", carbon: 16.7, rating: "Fair", visibleIndex: 73},
+            {sno: 74, name: "Meera Krishnan", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "17-Oct-2024", time: "12:25", carbon: 20.1, rating: "Needs Improvement", visibleIndex: 74},
+            {sno: 75, name: "Asma Al Junaibi", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "18-Oct-2024", time: "15:40", carbon: 18.6, rating: "Fair", visibleIndex: 75},
+            {sno: 76, name: "Ananya Menon", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "19-Oct-2024", time: "10:05", carbon: 23.2, rating: "Needs Improvement", visibleIndex: 76},
+            {sno: 77, name: "Shaikha Al Nahyan", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "20-Oct-2024", time: "14:50", carbon: 17.4, rating: "Fair", visibleIndex: 77},
+            {sno: 78, name: "Kavya Iyer", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "21-Oct-2024", time: "11:30", carbon: 19.9, rating: "Fair", visibleIndex: 78},
+            {sno: 79, name: "Deepika Reddy", country: "UAE", school: "Partner School, Abu Dhabi", class: "IX", date: "22-Oct-2024", time: "09:55", carbon: 21.4, rating: "Needs Improvement", visibleIndex: 79},
+            {sno: 80, name: "Jawaher Al Muhairi", country: "UAE", school: "Partner School, Abu Dhabi", class: "XI", date: "23-Oct-2024", time: "13:15", carbon: 18.2, rating: "Fair", visibleIndex: 80}
         ];
 
-        // Global variables
-        let users = {
-            students: {},
-            teachers: {}
-        };
+        let users = { students: {}, teachers: {} };
         let currentUser = null;
-        let sessionData = {
-            loginTime: null,
-            surveyResponses: [],
-            results: []
-        };
+        let sessionData = { loginTime: null, surveyResponses: [], results: [] };
         let allUserData = [];
         let database = null;
 
-        // Calculate statistics
         function getStats() {
             const indiaData = dummySurveyData.filter(d => d.country === 'India');
             const uaeData = dummySurveyData.filter(d => d.country === 'UAE');
-            
             const indiaAvg = (indiaData.reduce((sum, d) => sum + d.carbon, 0) / indiaData.length).toFixed(1);
             const uaeAvg = (uaeData.reduce((sum, d) => sum + d.carbon, 0) / uaeData.length).toFixed(1);
-            
             return {
-                total: dummySurveyData.length,
-                india: indiaData.length,
-                uae: uaeData.length,
-                indiaAvg: indiaAvg,
-                uaeAvg: uaeAvg,
+                total: dummySurveyData.length, india: indiaData.length, uae: uaeData.length,
+                indiaAvg: indiaAvg, uaeAvg: uaeAvg,
                 excellent: dummySurveyData.filter(d => d.rating === 'Excellent').length,
                 good: dummySurveyData.filter(d => d.rating === 'Good').length,
                 fair: dummySurveyData.filter(d => d.rating === 'Fair').length,
@@ -1170,16 +316,8 @@
             };
         }
 
-        // Initialize users object properly
-        function initializeUsers() {
-            if (!users || typeof users !== 'object') {
-                users = { students: {}, teachers: {} };
-            }
-            if (!users.students) users.students = {};
-            if (!users.teachers) users.teachers = {};
-        }
+        function initializeUsers() { if (!users || typeof users !== 'object') users = { students: {}, teachers: {} }; if (!users.students) users.students = {}; if (!users.teachers) users.teachers = {}; }
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDXSB4gMmN1J0eygau-IxBTpBELMu4yzLQ",
             authDomain: "queens-college-89373.firebaseapp.com",
@@ -1190,664 +328,88 @@
             appId: "1:903144655739:web:5e1613ccce5ec66dcB164e"
         };
 
-        // Initialize Firebase when page loads
-        window.addEventListener('load', function() {
-            try {
-                firebase.initializeApp(firebaseConfig);
-                database = firebase.database();
-                console.log('Firebase initialized successfully!');
-                loadFirebaseData();
-            } catch (error) {
-                console.error('Firebase initialization error:', error);
-            }
-        });
+        window.addEventListener('load', function() { try { firebase.initializeApp(firebaseConfig); database = firebase.database(); console.log('Firebase initialized!'); loadFirebaseData(); } catch (e) { console.error('Firebase error:', e); } });
 
-        // Load data from Firebase
-        function loadFirebaseData() {
-            if (!database) return;
-            
-            database.ref('users').once('value').then((snapshot) => {
-                const data = snapshot.val();
-                if (data) users = data;
-            }).catch(console.error);
+        function loadFirebaseData() { if (!database) return; database.ref('users').once('value').then(s => { if (s.val()) users = s.val(); }).catch(console.error); database.ref('activities').once('value').then(s => { if (s.val()) allUserData = Object.values(s.val()); }).catch(console.error); }
+        function saveUserToFirebase(type, id, data) { if (!database) return Promise.resolve(); return database.ref(`users/${type}s/${id}`).set(data); }
+        function generateUserId(type) { return (type === 'student' ? 'STU' : 'TCH') + Math.floor(100000 + Math.random() * 900000); }
 
-            database.ref('activities').once('value').then((snapshot) => {
-                const data = snapshot.val();
-                if (data) allUserData = Object.values(data);
-            }).catch(console.error);
-        }
+        function switchTab(type) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active')); if (type === 'user') { document.querySelectorAll('.tab')[0].classList.add('active'); document.getElementById('userSection').classList.add('active'); } else { document.querySelectorAll('.tab')[1].classList.add('active'); document.getElementById('adminSection').classList.add('active'); } }
 
-        // Save user to Firebase
-        function saveUserToFirebase(userType, userId, userData) {
-            if (!database) return Promise.resolve();
-            return database.ref(`users/${userType}s/${userId}`).set(userData);
-        }
+        function toggleUserForm(type) { const btns = document.querySelectorAll('#userSection .user-type-btn'); btns.forEach(b => b.classList.remove('selected')); if (type === 'login') { btns[0].classList.add('selected'); document.getElementById('userLogin').classList.remove('hidden'); document.getElementById('userSignup').classList.add('hidden'); } else { btns[1].classList.add('selected'); document.getElementById('userLogin').classList.add('hidden'); document.getElementById('userSignup').classList.remove('hidden'); } }
 
-        // Generate User ID
-        function generateUserId(type) {
-            const prefix = type === 'student' ? 'STU' : 'TCH';
-            return prefix + Math.floor(100000 + Math.random() * 900000);
-        }
+        function updateSignupForm() { const role = document.getElementById('userSignupRole').value; const label = document.getElementById('classDeptLabel'); const input = document.getElementById('userClassDept'); if (role === 'student') { label.textContent = 'Class'; input.placeholder = 'Enter your class'; } else if (role === 'teacher') { label.textContent = 'Department/Subject'; input.placeholder = 'Enter your department or subject'; } }
 
-        // Switch tabs
-        function switchTab(type) {
-            const tabs = document.querySelectorAll('.tab');
-            const sections = document.querySelectorAll('.form-section');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            sections.forEach(section => section.classList.remove('active'));
-            
-            if (type === 'user') {
-                tabs[0].classList.add('active');
-                document.getElementById('userSection').classList.add('active');
-            } else if (type === 'admin') {
-                tabs[1].classList.add('active');
-                document.getElementById('adminSection').classList.add('active');
-            }
-        }
+        function userSignup() { initializeUsers(); const role = document.getElementById('userSignupRole').value; const name = document.getElementById('userName').value.trim(); const classDept = document.getElementById('userClassDept').value.trim(); const country = document.getElementById('userCountry').value; const password = document.getElementById('userNewPassword').value; if (!role || !name || !classDept || !country || !password) { alert('Please fill in all fields!'); return; } const userId = generateUserId(role); const userData = { name, [role === 'student' ? 'class' : 'subject']: classDept, country, password, role, createdAt: new Date().toISOString() }; if (role === 'student') users.students[userId] = userData; else users.teachers[userId] = userData; saveUserToFirebase(role, userId, userData).then(() => { alert(`✅ Account Created!\n\nYour User ID: ${userId}\n\nPlease save this ID!`); document.getElementById('userUserId').value = userId; document.getElementById('userRole').value = role; toggleUserForm('login'); }).catch(() => alert(`Account created locally.\nUser ID: ${userId}`)); }
 
-        // Toggle user form between login and signup
-        function toggleUserForm(type) {
-            const buttons = document.querySelectorAll('#userSection .user-type-btn');
-            const loginForm = document.getElementById('userLogin');
-            const signupForm = document.getElementById('userSignup');
-            
-            buttons.forEach(btn => btn.classList.remove('selected'));
-            
-            if (type === 'login') {
-                buttons[0].classList.add('selected');
-                loginForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-            } else {
-                buttons[1].classList.add('selected');
-                loginForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-            }
-        }
+        function userLogin() { const userId = document.getElementById('userUserId').value.trim(); const role = document.getElementById('userRole').value; const password = document.getElementById('userPassword').value; if (!userId || !role || !password) { alert('Please enter all fields!'); return; } const col = role === 'student' ? users.students : users.teachers; if (col && col[userId] && col[userId].password === password) { currentUser = { ...col[userId], userId, userType: role.charAt(0).toUpperCase() + role.slice(1) }; sessionData.loginTime = new Date(); showDashboard(); return; } if (database) { database.ref(`users/${role}s/${userId}`).once('value').then(s => { const u = s.val(); if (u && u.password === password) { currentUser = { ...u, userId, userType: role.charAt(0).toUpperCase() + role.slice(1) }; sessionData.loginTime = new Date(); showDashboard(); } else alert('Invalid credentials!'); }).catch(() => alert('Login failed!')); } else alert('User not found!'); }
 
-        // Update signup form based on role
-        function updateSignupForm() {
-            const role = document.getElementById('userSignupRole').value;
-            const label = document.getElementById('classDeptLabel');
-            const input = document.getElementById('userClassDept');
-            
-            if (role === 'student') {
-                label.textContent = 'Class';
-                input.placeholder = 'Enter your class';
-            } else if (role === 'teacher') {
-                label.textContent = 'Department/Subject';
-                input.placeholder = 'Enter your department or subject';
-            }
-        }
+        function adminLogin() { const u = document.getElementById('adminUsername').value.trim(); const p = document.getElementById('adminPassword').value; if (u === 'admin' && p === 'carbon2025') showAdminDashboard(); else alert('Invalid admin credentials!'); }
 
-        // User Signup
-        function userSignup() {
-            initializeUsers();
-            
-            const role = document.getElementById('userSignupRole').value;
-            const name = document.getElementById('userName').value.trim();
-            const classDept = document.getElementById('userClassDept').value.trim();
-            const country = document.getElementById('userCountry').value;
-            const password = document.getElementById('userNewPassword').value;
-
-            if (!role || !name || !classDept || !country || !password) {
-                alert('Please fill in all fields!');
-                return;
-            }
-
-            const userId = generateUserId(role);
-            const userData = {
-                name: name,
-                [role === 'student' ? 'class' : 'subject']: classDept,
-                country: country,
-                password: password,
-                role: role,
-                createdAt: new Date().toISOString()
-            };
-
-            if (role === 'student') {
-                users.students[userId] = userData;
-            } else {
-                users.teachers[userId] = userData;
-            }
-
-            saveUserToFirebase(role, userId, userData).then(() => {
-                alert(`✅ Account Created!\n\nYour User ID: ${userId}\n\nPlease save this ID!`);
-                document.getElementById('userUserId').value = userId;
-                document.getElementById('userRole').value = role;
-                toggleUserForm('login');
-            }).catch(error => {
-                alert(`Account created locally.\nUser ID: ${userId}`);
-            });
-        }
-
-        // User Login
-        function userLogin() {
-            const userId = document.getElementById('userUserId').value.trim();
-            const role = document.getElementById('userRole').value;
-            const password = document.getElementById('userPassword').value;
-
-            if (!userId || !role || !password) {
-                alert('Please enter all fields!');
-                return;
-            }
-
-            const userCollection = role === 'student' ? users.students : users.teachers;
-            if (userCollection && userCollection[userId] && userCollection[userId].password === password) {
-                currentUser = { ...userCollection[userId], userId: userId, userType: role.charAt(0).toUpperCase() + role.slice(1) };
-                sessionData.loginTime = new Date();
-                showDashboard();
-                return;
-            }
-
-            if (database) {
-                database.ref(`users/${role}s/${userId}`).once('value').then((snapshot) => {
-                    const user = snapshot.val();
-                    if (user && user.password === password) {
-                        currentUser = { ...user, userId: userId, userType: role.charAt(0).toUpperCase() + role.slice(1) };
-                        sessionData.loginTime = new Date();
-                        showDashboard();
-                    } else {
-                        alert('Invalid credentials!');
-                    }
-                }).catch(() => alert('Login failed!'));
-            } else {
-                alert('User not found!');
-            }
-        }
-
-        // Admin Login
-        function adminLogin() {
-            const username = document.getElementById('adminUsername').value.trim();
-            const password = document.getElementById('adminPassword').value;
-
-            if (username === 'admin' && password === 'carbon2025') {
-                showAdminDashboard();
-            } else {
-                alert('Invalid admin credentials!');
-            }
-        }
-
-        // ============ ENHANCED ADMIN DASHBOARD ============
         function showAdminDashboard() {
-            const container = document.getElementById('mainContainer');
-            container.classList.add('wide');
-            
+            const c = document.getElementById('mainContainer'); c.classList.add('wide');
             const stats = getStats();
-            
-            container.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; color: #8B1538; font-size: 24px; font-weight: 700;">QUEENS' COLLEGE INDORE</h2>
-                    <h2 style="margin: 10px 0 5px 0; color: #333;">Track & Tread : My Carbon Shadow</h2>
-                    <p style="margin: 5px 0; color: #667eea; font-weight: 500;">Admin Dashboard - RIDS British Council Project</p>
-                </div>
-
-                <div class="dashboard-header">
-                    <div class="welcome-section">
-                        <h2>🔐 Admin Dashboard</h2>
-                        <p class="user-info">Project Management & Analytics</p>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-
-                <!-- Stats Cards -->
+            c.innerHTML = `
+                <div style="text-align:center;margin-bottom:20px;"><h2 style="margin:0;color:#8B1538;font-size:24px;font-weight:700;">QUEENS' COLLEGE INDORE</h2><h2 style="margin:10px 0 5px 0;color:#333;">Track & Tread : My Carbon Shadow</h2><p style="margin:5px 0;color:#667eea;font-weight:500;">Admin Dashboard - RIDS British Council Project</p></div>
+                <div class="dashboard-header"><div class="welcome-section"><h2>🔐 Admin Dashboard</h2><p class="user-info">Project Management & Analytics</p></div><button class="logout-btn" onclick="logout()">Logout</button></div>
                 <div class="admin-stats-grid">
-                    <div class="admin-stat-card">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-value">${stats.total}</div>
-                        <div class="stat-label">Total Students</div>
-                    </div>
-                    <div class="admin-stat-card india">
-                        <div class="stat-icon">🇮🇳</div>
-                        <div class="stat-value">${stats.india}</div>
-                        <div class="stat-label">India Students</div>
-                    </div>
-                    <div class="admin-stat-card uae">
-                        <div class="stat-icon">🇦🇪</div>
-                        <div class="stat-value">${stats.uae}</div>
-                        <div class="stat-label">UAE Students</div>
-                    </div>
-                    <div class="admin-stat-card surveys">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-value">${stats.total}</div>
-                        <div class="stat-label">Surveys Completed</div>
-                    </div>
+                    <div class="admin-stat-card"><div class="stat-icon">👥</div><div class="stat-value">${stats.total}</div><div class="stat-label">Total Students</div></div>
+                    <div class="admin-stat-card india"><div class="stat-icon">🇮🇳</div><div class="stat-value">${stats.india}</div><div class="stat-label">India Students</div></div>
+                    <div class="admin-stat-card uae"><div class="stat-icon">🇦🇪</div><div class="stat-value">${stats.uae}</div><div class="stat-label">UAE Students</div></div>
+                    <div class="admin-stat-card surveys"><div class="stat-icon">📊</div><div class="stat-value">${stats.total}</div><div class="stat-label">Surveys Completed</div></div>
                 </div>
-
-                <!-- Summary Banner -->
-                <div class="summary-banner">
-                    <h4>📋 Project Summary - October 13-29, 2024</h4>
-                    <p>🏫 <strong>India:</strong> Queens' College, Indore | <strong>UAE:</strong> Partner School, Abu Dhabi</p>
-                    <p>📈 <strong>India Avg:</strong> ${stats.indiaAvg} kg CO₂/day | <strong>UAE Avg:</strong> ${stats.uaeAvg} kg CO₂/day</p>
-                    <p>🎯 <strong>Project Coordinator:</strong> Mr. Sumeet Sahu</p>
-                </div>
-
-                <!-- Admin Tabs -->
+                <div class="summary-banner"><h4>📋 Project Summary - October 13-29, 2024</h4><p>🏫 <strong>India:</strong> Queens' College, Indore | <strong>UAE:</strong> Partner School, Abu Dhabi</p><p>📈 <strong>India Avg:</strong> ${stats.indiaAvg} kg CO₂/day | <strong>UAE Avg:</strong> ${stats.uaeAvg} kg CO₂/day</p><p>🎯 <strong>Project Coordinator:</strong> Mr. Sumeet Sahu</p></div>
                 <div class="admin-tabs-container">
                     <button class="admin-tab-btn active" onclick="showAdminSection('data')">📋 Survey Data</button>
                     <button class="admin-tab-btn" onclick="showAdminSection('analytics')">📊 Analytics</button>
                     <button class="admin-tab-btn" onclick="showAdminSection('comparison')">🌍 Comparison</button>
                     <button class="admin-tab-btn" onclick="showAdminSection('export')">📥 Export</button>
                 </div>
-
-                <!-- Data Section -->
                 <div id="adminDataSection" class="admin-section">
                     <h3>📋 Student Survey Data (October 13-29, 2024)</h3>
-                    
                     <div class="filter-container">
-                        <select id="countryFilter" onchange="filterAdminData()">
-                            <option value="all">All Countries</option>
-                            <option value="India">🇮🇳 India Only</option>
-                            <option value="UAE">🇦🇪 UAE Only</option>
-                        </select>
-                        <select id="classFilter" onchange="filterAdminData()">
-                            <option value="all">All Classes</option>
-                            <option value="IX">Class IX</option>
-                            <option value="XI">Class XI</option>
-                            <option value="XII">Class XII</option>
-                        </select>
-                        <select id="ratingFilter" onchange="filterAdminData()">
-                            <option value="all">All Ratings</option>
-                            <option value="Excellent">Excellent</option>
-                            <option value="Good">Good</option>
-                            <option value="Fair">Fair</option>
-                            <option value="Needs Improvement">Needs Improvement</option>
-                        </select>
+                        <select id="countryFilter" onchange="filterAdminData()"><option value="all">All Countries</option><option value="India">🇮🇳 India Only</option><option value="UAE">🇦🇪 UAE Only</option></select>
+                        <select id="classFilter" onchange="filterAdminData()"><option value="all">All Classes</option><option value="IX">Class IX</option><option value="XI">Class XI</option></select>
+                        <select id="ratingFilter" onchange="filterAdminData()"><option value="all">All Ratings</option><option value="Excellent">Excellent</option><option value="Good">Good</option><option value="Fair">Fair</option><option value="Needs Improvement">Needs Improvement</option></select>
                     </div>
-                    
-                    <div class="table-container">
-                        <table class="survey-table" id="surveyDataTable">
-                            <thead>
-                                <tr>
-                                    <th>S.No</th>
-                                    <th>Student Name</th>
-                                    <th>Country</th>
-                                    <th>School</th>
-                                    <th>Class</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Carbon (kg CO₂)</th>
-                                    <th>Rating</th>
-                                </tr>
-                            </thead>
-                            <tbody id="surveyTableBody"></tbody>
-                        </table>
-                    </div>
-                    <p style="margin-top: 15px; font-size: 13px; color: #666;">
-                        Showing <span id="filteredCount">${stats.total}</span> of ${stats.total} entries
-                    </p>
+                    <div class="table-container"><table class="survey-table" id="surveyDataTable"><thead><tr><th>S.No</th><th>Student Name</th><th>Country</th><th>School</th><th>Class</th><th>Date</th><th>Time</th><th>Carbon (kg CO₂)</th><th>Rating</th></tr></thead><tbody id="surveyTableBody"></tbody></table></div>
+                    <p style="margin-top:15px;font-size:13px;color:#666;">Showing <span id="filteredCount">${stats.total}</span> of ${stats.total} entries</p>
                 </div>
-
-                <!-- Analytics Section (Hidden by default) -->
-                <div id="adminAnalyticsSection" class="admin-section hidden">
-                    <h3>📊 Analytics Dashboard</h3>
-                    
-                    <div class="admin-chart-grid">
-                        <div class="admin-chart-box">
-                            <h4>📈 Weekly Carbon Footprint Comparison</h4>
-                            <div class="chart-bar-group" id="weeklyChart"></div>
-                            <div class="chart-legend">
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #f97316;"></div>
-                                    <span>India</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #0ea5e9;"></div>
-                                    <span>UAE</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="admin-chart-box">
-                            <h4>🎯 Rating Distribution</h4>
-                            <div id="ratingChartContainer"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="admin-chart-grid">
-                        <div class="admin-chart-box">
-                            <h4>📚 Class-wise Participation</h4>
-                            <div id="classChartContainer"></div>
-                        </div>
-                        
-                        <div class="admin-chart-box">
-                            <h4>⚡ Emission Sources</h4>
-                            <div id="sourceChartContainer"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Comparison Section (Hidden by default) -->
-                <div id="adminComparisonSection" class="admin-section hidden">
-                    <h3>🌍 India vs UAE Comparison</h3>
-                    
-                    <div class="admin-chart-grid">
-                        <div class="admin-chart-box">
-                            <h4>📊 Average Carbon Footprint</h4>
-                            <div style="padding: 20px 0;">
-                                <div class="comparison-row">
-                                    <span class="comparison-label">🇮🇳 India Avg</span>
-                                    <div class="comparison-bar-bg">
-                                        <div class="comparison-bar-fill" style="width: ${(stats.indiaAvg / 25) * 100}%; background: linear-gradient(90deg, #f97316, #ea580c);">${stats.indiaAvg} kg</div>
-                                    </div>
-                                </div>
-                                <div class="comparison-row">
-                                    <span class="comparison-label">🇦🇪 UAE Avg</span>
-                                    <div class="comparison-bar-bg">
-                                        <div class="comparison-bar-fill" style="width: ${(stats.uaeAvg / 25) * 100}%; background: linear-gradient(90deg, #0ea5e9, #0284c7);">${stats.uaeAvg} kg</div>
-                                    </div>
-                                </div>
-                                <div class="comparison-row">
-                                    <span class="comparison-label">🌍 Global Avg</span>
-                                    <div class="comparison-bar-bg">
-                                        <div class="comparison-bar-fill" style="width: 66%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);">16.5 kg</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="admin-chart-box">
-                            <h4>📈 Key Insights</h4>
-                            <div style="padding: 10px; font-size: 14px; line-height: 1.8;">
-                                <p>✅ <strong>India students</strong> show lower carbon footprint:</p>
-                                <ul style="margin-left: 20px; margin-bottom: 15px; color: #666;">
-                                    <li>Higher use of public transport</li>
-                                    <li>Lower AC usage hours</li>
-                                    <li>More carpooling practices</li>
-                                </ul>
-                                <p>⚠️ <strong>UAE students</strong> have higher footprint:</p>
-                                <ul style="margin-left: 20px; color: #666;">
-                                    <li>Higher AC dependency (climate)</li>
-                                    <li>More personal vehicle usage</li>
-                                    <li>Larger household size</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Export Section (Hidden by default) -->
-                <div id="adminExportSection" class="admin-section hidden">
-                    <h3>📥 Export Data</h3>
-                    
-                    <div style="padding: 30px; text-align: center;">
-                        <p style="margin-bottom: 25px; color: #666; font-size: 15px;">Download survey data in various formats</p>
-                        
-                        <button class="export-btn" onclick="exportToCSV()">📊 Export as CSV</button>
-                        <button class="export-btn secondary" onclick="exportToJSON()">📄 Export as JSON</button>
-                        <button class="export-btn" onclick="window.print()">🖨️ Print Report</button>
-                        
-                        <div style="margin-top: 35px; padding: 25px; background: #f5f5f5; border-radius: 12px; text-align: left;">
-                            <h4 style="margin-bottom: 15px; color: #667eea;">📋 Export includes:</h4>
-                            <ul style="font-size: 14px; color: #666; line-height: 2;">
-                                <li>✅ All 80 student survey entries</li>
-                                <li>✅ Student names, classes, and schools</li>
-                                <li>✅ Survey dates and timestamps</li>
-                                <li>✅ Calculated carbon footprints</li>
-                                <li>✅ Ratings and performance indicators</li>
-                                <li>✅ Country-wise distribution</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="highlight-box">
-                    <p><strong>Admin Access:</strong> You have full access to all system features and data. Data period: October 13-29, 2024</p>
-                </div>
-            `;
-            
-            // Populate table and charts
-            populateAdminTable(dummySurveyData);
-            renderAdminCharts();
+                <div id="adminAnalyticsSection" class="admin-section hidden"><h3>📊 Analytics Dashboard</h3><div class="admin-chart-grid"><div class="admin-chart-box"><h4>📈 Weekly Carbon Footprint Comparison</h4><div class="chart-bar-group" id="weeklyChart"></div><div class="chart-legend"><div class="legend-item"><div class="legend-color" style="background:#f97316;"></div><span>India</span></div><div class="legend-item"><div class="legend-color" style="background:#0ea5e9;"></div><span>UAE</span></div></div></div><div class="admin-chart-box"><h4>🎯 Rating Distribution</h4><div id="ratingChartContainer"></div></div></div><div class="admin-chart-grid"><div class="admin-chart-box"><h4>📚 Class-wise Participation</h4><div id="classChartContainer"></div></div><div class="admin-chart-box"><h4>⚡ Emission Sources</h4><div id="sourceChartContainer"></div></div></div></div>
+                <div id="adminComparisonSection" class="admin-section hidden"><h3>🌍 India vs UAE Comparison</h3><div class="admin-chart-grid"><div class="admin-chart-box"><h4>📊 Average Carbon Footprint</h4><div style="padding:20px 0;"><div class="comparison-row"><span class="comparison-label">🇮🇳 India Avg</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:${(stats.indiaAvg/25)*100}%;background:linear-gradient(90deg,#f97316,#ea580c);">${stats.indiaAvg} kg</div></div></div><div class="comparison-row"><span class="comparison-label">🇦🇪 UAE Avg</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:${(stats.uaeAvg/25)*100}%;background:linear-gradient(90deg,#0ea5e9,#0284c7);">${stats.uaeAvg} kg</div></div></div><div class="comparison-row"><span class="comparison-label">🌍 Global Avg</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:66%;background:linear-gradient(90deg,#8b5cf6,#7c3aed);">16.5 kg</div></div></div></div></div><div class="admin-chart-box"><h4>📈 Key Insights</h4><div style="padding:10px;font-size:14px;line-height:1.8;"><p>✅ <strong>India students</strong> show lower carbon footprint:</p><ul style="margin-left:20px;margin-bottom:15px;color:#666;"><li>Higher use of public transport</li><li>Lower AC usage hours</li><li>More carpooling practices</li></ul><p>⚠️ <strong>UAE students</strong> have higher footprint:</p><ul style="margin-left:20px;color:#666;"><li>Higher AC dependency (climate)</li><li>More personal vehicle usage</li><li>Larger household size</li></ul></div></div></div></div>
+                <div id="adminExportSection" class="admin-section hidden"><h3>📥 Export Data</h3><div style="padding:30px;text-align:center;"><p style="margin-bottom:25px;color:#666;font-size:15px;">Download survey data in various formats</p><button class="export-btn" onclick="exportToCSV()">📊 Export as CSV</button><button class="export-btn secondary" onclick="exportToJSON()">📄 Export as JSON</button><button class="export-btn" onclick="window.print()">🖨️ Print Report</button><div style="margin-top:35px;padding:25px;background:#f5f5f5;border-radius:12px;text-align:left;"><h4 style="margin-bottom:15px;color:#667eea;">📋 Export includes:</h4><ul style="font-size:14px;color:#666;line-height:2;"><li>✅ All 80 student survey entries</li><li>✅ Student names, classes, and schools</li><li>✅ Survey dates and timestamps</li><li>✅ Calculated carbon footprints</li><li>✅ Ratings and performance indicators</li><li>✅ Country-wise distribution</li></ul></div></div></div>
+                <div class="highlight-box"><p><strong>Admin Access:</strong> You have full access to all system features and data. Data period: October 13-29, 2024</p></div>`;
+            populateAdminTable(dummySurveyData); renderAdminCharts();
         }
 
-        // Populate Admin Table
-        function populateAdminTable(data) {
-            const tbody = document.getElementById('surveyTableBody');
-            tbody.innerHTML = '';
-            
-            data.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                tr.className = row.country === 'India' ? 'india-row' : 'uae-row';
-                
-                const ratingClass = row.rating.toLowerCase().replace(' ', '-');
-                
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><strong>${row.name}</strong></td>
-                    <td>${row.country === 'India' ? '🇮🇳' : '🇦🇪'} ${row.country}</td>
-                    <td>${row.school}</td>
-                    <td>Class ${row.class}</td>
-                    <td>${row.date}</td>
-                    <td>${row.time}</td>
-                    <td><strong>${row.carbon}</strong></td>
-                    <td><span class="rating-badge ${ratingClass}">${row.rating}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-            
-            document.getElementById('filteredCount').textContent = data.length;
-        }
+        function populateAdminTable(data) { const tbody = document.getElementById('surveyTableBody'); tbody.innerHTML = ''; data.forEach((row, i) => { const tr = document.createElement('tr'); tr.className = row.country === 'India' ? 'india-row' : 'uae-row'; tr.innerHTML = `<td>${i+1}</td><td><strong>${row.name}</strong></td><td>${row.country === 'India' ? '🇮🇳' : '🇦🇪'} ${row.country}</td><td>${row.school}</td><td>Class ${row.class}</td><td>${row.date}</td><td>${row.time}</td><td><strong>${row.carbon}</strong></td><td><span class="rating-badge ${row.rating.toLowerCase().replace(' ','-')}">${row.rating}</span></td>`; tbody.appendChild(tr); }); document.getElementById('filteredCount').textContent = data.length; }
 
-        // Filter Admin Data
-        function filterAdminData() {
-            const countryFilter = document.getElementById('countryFilter').value;
-            const classFilter = document.getElementById('classFilter').value;
-            const ratingFilter = document.getElementById('ratingFilter').value;
-            
-            let filtered = dummySurveyData;
-            
-            if (countryFilter !== 'all') {
-                filtered = filtered.filter(d => d.country === countryFilter);
-            }
-            if (classFilter !== 'all') {
-                filtered = filtered.filter(d => d.class === classFilter);
-            }
-            if (ratingFilter !== 'all') {
-                filtered = filtered.filter(d => d.rating === ratingFilter);
-            }
-            
-            populateAdminTable(filtered);
-        }
+        function filterAdminData() { let f = dummySurveyData; const cf = document.getElementById('countryFilter').value; const clf = document.getElementById('classFilter').value; const rf = document.getElementById('ratingFilter').value; if (cf !== 'all') f = f.filter(d => d.country === cf); if (clf !== 'all') f = f.filter(d => d.class === clf); if (rf !== 'all') f = f.filter(d => d.rating === rf); populateAdminTable(f); }
 
-        // Show Admin Section
-        function showAdminSection(section) {
-            // Update tab buttons
-            document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Hide all sections
-            document.getElementById('adminDataSection').classList.add('hidden');
-            document.getElementById('adminAnalyticsSection').classList.add('hidden');
-            document.getElementById('adminComparisonSection').classList.add('hidden');
-            document.getElementById('adminExportSection').classList.add('hidden');
-            
-            // Show selected section
-            if (section === 'data') {
-                document.getElementById('adminDataSection').classList.remove('hidden');
-            } else if (section === 'analytics') {
-                document.getElementById('adminAnalyticsSection').classList.remove('hidden');
-                renderAdminCharts();
-            } else if (section === 'comparison') {
-                document.getElementById('adminComparisonSection').classList.remove('hidden');
-            } else if (section === 'export') {
-                document.getElementById('adminExportSection').classList.remove('hidden');
-            }
-        }
+        function showAdminSection(section) { document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); ['adminDataSection','adminAnalyticsSection','adminComparisonSection','adminExportSection'].forEach(id => document.getElementById(id).classList.add('hidden')); const map = {data:'adminDataSection',analytics:'adminAnalyticsSection',comparison:'adminComparisonSection',export:'adminExportSection'}; document.getElementById(map[section]).classList.remove('hidden'); if (section === 'analytics') renderAdminCharts(); }
 
-        // Render Admin Charts
         function renderAdminCharts() {
             const stats = getStats();
-            
-            // Weekly Chart
-            const weeklyChart = document.getElementById('weeklyChart');
-            if (weeklyChart) {
-                const weeks = ['Week 1', 'Week 2', 'Week 3'];
-                const indiaWeekly = [12.1, 11.8, 12.4];
-                const uaeWeekly = [19.2, 18.8, 19.5];
-                
-                weeklyChart.innerHTML = weeks.map((week, i) => `
-                    <div class="chart-bar-item">
-                        <div class="chart-bars">
-                            <div class="chart-bar india-bar" style="height: ${indiaWeekly[i] * 8}px;"></div>
-                            <div class="chart-bar uae-bar" style="height: ${uaeWeekly[i] * 8}px;"></div>
-                        </div>
-                        <div class="chart-bar-label">${week}</div>
-                    </div>
-                `).join('');
-            }
-            
-            // Rating Chart
-            const ratingChart = document.getElementById('ratingChartContainer');
-            if (ratingChart) {
-                const ratings = [
-                    { label: 'Excellent', count: stats.excellent, color: '#10b981' },
-                    { label: 'Good', count: stats.good, color: '#3b82f6' },
-                    { label: 'Fair', count: stats.fair, color: '#f59e0b' },
-                    { label: 'Needs Improvement', count: stats.needsImprovement, color: '#ef4444' }
-                ];
-                
-                ratingChart.innerHTML = ratings.map(r => `
-                    <div class="comparison-row">
-                        <span class="comparison-label">${r.label}</span>
-                        <div class="comparison-bar-bg">
-                            <div class="comparison-bar-fill" style="width: ${(r.count / 80) * 100}%; background: ${r.color};">${r.count}</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            // Class Chart
-            const classChart = document.getElementById('classChartContainer');
-            if (classChart) {
-                const classes = [
-                    { label: 'Class IX', count: dummySurveyData.filter(d => d.class === 'IX').length },
-                    { label: 'Class XI', count: dummySurveyData.filter(d => d.class === 'XI').length },
-                    { label: 'Class XII', count: dummySurveyData.filter(d => d.class === 'XII').length }
-                ];
-                
-                classChart.innerHTML = classes.map(c => `
-                    <div class="comparison-row">
-                        <span class="comparison-label">${c.label}</span>
-                        <div class="comparison-bar-bg">
-                            <div class="comparison-bar-fill" style="width: ${(c.count / 80) * 100}%; background: linear-gradient(90deg, #667eea, #764ba2);">${c.count} students</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            // Source Chart
-            const sourceChart = document.getElementById('sourceChartContainer');
-            if (sourceChart) {
-                sourceChart.innerHTML = `
-                    <div class="comparison-row">
-                        <span class="comparison-label">🚗 Transport</span>
-                        <div class="comparison-bar-bg">
-                            <div class="comparison-bar-fill" style="width: 45%; background: #f97316;">45%</div>
-                        </div>
-                    </div>
-                    <div class="comparison-row">
-                        <span class="comparison-label">⚡ Electricity</span>
-                        <div class="comparison-bar-bg">
-                            <div class="comparison-bar-fill" style="width: 35%; background: #0ea5e9;">35%</div>
-                        </div>
-                    </div>
-                    <div class="comparison-row">
-                        <span class="comparison-label">❄️ AC Usage</span>
-                        <div class="comparison-bar-bg">
-                            <div class="comparison-bar-fill" style="width: 20%; background: #8b5cf6;">20%</div>
-                        </div>
-                    </div>
-                `;
-            }
+            const wc = document.getElementById('weeklyChart');
+            if (wc) { const w = ['Week 1','Week 2','Week 3'], iv = [12.1,11.8,12.4], uv = [19.2,18.8,19.5]; wc.innerHTML = w.map((wk,i) => `<div class="chart-bar-item"><div class="chart-bars"><div class="chart-bar india-bar" style="height:${iv[i]*8}px;"></div><div class="chart-bar uae-bar" style="height:${uv[i]*8}px;"></div></div><div class="chart-bar-label">${wk}</div></div>`).join(''); }
+            const rc = document.getElementById('ratingChartContainer');
+            if (rc) { rc.innerHTML = [{l:'Excellent',c:stats.excellent,co:'#10b981'},{l:'Good',c:stats.good,co:'#3b82f6'},{l:'Fair',c:stats.fair,co:'#f59e0b'},{l:'Needs Improvement',c:stats.needsImprovement,co:'#ef4444'}].map(r => `<div class="comparison-row"><span class="comparison-label">${r.l}</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:${(r.c/80)*100}%;background:${r.co};">${r.c}</div></div></div>`).join(''); }
+            const cc = document.getElementById('classChartContainer');
+            if (cc) { const cls = [{label:'Class IX',count:dummySurveyData.filter(d=>d.class==='IX').length},{label:'Class XI',count:dummySurveyData.filter(d=>d.class==='XI').length}]; cc.innerHTML = cls.map(c => `<div class="comparison-row"><span class="comparison-label">${c.label}</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:${(c.count/80)*100}%;background:linear-gradient(90deg,#667eea,#764ba2);">${c.count} students</div></div></div>`).join(''); }
+            const sc = document.getElementById('sourceChartContainer');
+            if (sc) { sc.innerHTML = `<div class="comparison-row"><span class="comparison-label">🚗 Transport</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:45%;background:#f97316;">45%</div></div></div><div class="comparison-row"><span class="comparison-label">⚡ Electricity</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:35%;background:#0ea5e9;">35%</div></div></div><div class="comparison-row"><span class="comparison-label">❄️ AC Usage</span><div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width:20%;background:#8b5cf6;">20%</div></div></div>`; }
         }
 
-        // Export to CSV
-        function exportToCSV() {
-            let csv = 'S.No,Student Name,Country,School,Class,Date,Time,Carbon Footprint (kg CO2/day),Rating\n';
-            
-            dummySurveyData.forEach(row => {
-                csv += `${row.sno},"${row.name}",${row.country},"${row.school}",${row.class},${row.date},${row.time},${row.carbon},${row.rating}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Carbon_Footprint_Survey_Data_Oct2024.csv';
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            alert('✅ CSV file downloaded successfully!');
-        }
+        function exportToCSV() { let csv = 'S.No,Student Name,Country,School,Class,Date,Time,Carbon Footprint (kg CO2/day),Rating\n'; dummySurveyData.forEach(r => { csv += `${r.sno},"${r.name}",${r.country},"${r.school}",${r.class},${r.date},${r.time},${r.carbon},${r.rating}\n`; }); const b = new Blob([csv],{type:'text/csv'}); const u = window.URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'Carbon_Footprint_Survey_Data_Oct2024.csv'; a.click(); window.URL.revokeObjectURL(u); alert('✅ CSV file downloaded!'); }
 
-        // Export to JSON
-        function exportToJSON() {
-            const json = JSON.stringify(dummySurveyData, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Carbon_Footprint_Survey_Data_Oct2024.json';
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            alert('✅ JSON file downloaded successfully!');
-        }
+        function exportToJSON() { const j = JSON.stringify(dummySurveyData, null, 2); const b = new Blob([j],{type:'application/json'}); const u = window.URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'Carbon_Footprint_Survey_Data_Oct2024.json'; a.click(); window.URL.revokeObjectURL(u); alert('✅ JSON file downloaded!'); }
 
-        // Show Dashboard (for regular users)
         function showDashboard() {
-            const container = document.getElementById('mainContainer');
-            container.classList.add('wide');
-            container.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; color: #8B1538;">QUEENS' COLLEGE INDORE</h2>
-                    <h2 style="margin: 10px 0 5px 0; color: #333;">Track & Tread : My Carbon Shadow</h2>
-                </div>
-
-                <div class="dashboard-header">
-                    <div class="welcome-section">
-                        <h2>Welcome, ${currentUser.name}! 🌍</h2>
-                        <p class="user-info">${currentUser.userType} | ${currentUser.country}</p>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-
-                <div class="main-title">Learn About Carbon Footprint</div>
-                <p class="intro-text">Explore topics and calculate your environmental impact</p>
-
-                <div class="topic-grid">
-                    <div class="topic-card" onclick="alert('Feature coming soon!')">
-                        <div class="topic-icon">🌱</div>
-                        <h3>What is Carbon Footprint?</h3>
-                        <p>Learn the basics</p>
-                    </div>
-                    <div class="topic-card" onclick="alert('Feature coming soon!')">
-                        <div class="topic-icon">🧮</div>
-                        <h3>Calculate Footprint</h3>
-                        <p>Take surveys</p>
-                    </div>
-                    <div class="topic-card" onclick="alert('Feature coming soon!')">
-                        <div class="topic-icon">📊</div>
-                        <h3>Country Comparison</h3>
-                        <p>Compare emissions</p>
-                    </div>
-                    <div class="topic-card" onclick="alert('Feature coming soon!')">
-                        <div class="topic-icon">♻️</div>
-                        <h3>Reduction Methods</h3>
-                        <p>Learn to reduce</p>
-                    </div>
-                </div>
-            `;
+            const c = document.getElementById('mainContainer'); c.classList.add('wide');
+            c.innerHTML = `<div style="text-align:center;margin-bottom:20px;"><h2 style="margin:0;color:#8B1538;">QUEENS' COLLEGE INDORE</h2><h2 style="margin:10px 0 5px 0;color:#333;">Track & Tread : My Carbon Shadow</h2></div><div class="dashboard-header"><div class="welcome-section"><h2>Welcome, ${currentUser.name}! 🌍</h2><p class="user-info">${currentUser.userType} | ${currentUser.country}</p></div><button class="logout-btn" onclick="logout()">Logout</button></div><div class="main-title">Learn About Carbon Footprint</div><p class="intro-text">Explore topics and calculate your environmental impact</p><div class="topic-grid"><div class="topic-card" onclick="alert('Feature coming soon!')"><div class="topic-icon">🌱</div><h3>What is Carbon Footprint?</h3><p>Learn the basics</p></div><div class="topic-card" onclick="alert('Feature coming soon!')"><div class="topic-icon">🧮</div><h3>Calculate Footprint</h3><p>Take surveys</p></div><div class="topic-card" onclick="alert('Feature coming soon!')"><div class="topic-icon">📊</div><h3>Country Comparison</h3><p>Compare emissions</p></div><div class="topic-card" onclick="alert('Feature coming soon!')"><div class="topic-icon">♻️</div><h3>Reduction Methods</h3><p>Learn to reduce</p></div></div>`;
         }
 
-        // Logout
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                location.reload();
-            }
-        }
-
+        function logout() { if (confirm('Are you sure you want to logout?')) location.reload(); }
         console.log('Track & Tread: My Carbon Shadow - App Initialized');
     </script>
 </body>
